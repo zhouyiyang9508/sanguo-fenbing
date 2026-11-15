@@ -22,6 +22,8 @@
   .kicker{font-size:11px;letter-spacing:.32em;color:var(--gold);opacity:.85}
   h1{font-size:27px;margin:10px 0 6px;letter-spacing:.12em;font-weight:600}
   .sub{font-size:12.5px;color:var(--dim);letter-spacing:.06em;line-height:1.7}
+  .clock{display:inline-block;margin-top:12px;font-size:10.5px;letter-spacing:.24em;
+    color:#c9a15c;border:1px solid #4a3a24;padding:4px 12px;border-radius:2px}
   .rule{height:1px;background:linear-gradient(90deg,transparent,#4a3d2c,transparent);margin:18px 0}
   .card{background:linear-gradient(180deg,var(--paper) 0%,var(--paper2) 100%);
     color:var(--ink);border-radius:3px;padding:18px 18px 16px;margin:14px 0;
@@ -38,8 +40,13 @@
   .row .top{display:flex;justify-content:space-between;align-items:baseline;font-size:13px}
   .row .top b{font-weight:600;letter-spacing:.05em}
   .row .top span{font-variant-numeric:tabular-nums;font-size:14px}
-  .row .req{font-size:11px;color:#4d4537;margin-top:3px;letter-spacing:.02em;line-height:1.5}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;margin:4px 0 0;padding:0;display:block}
+  .who{display:flex;gap:7px;margin:7px 0 2px;padding-left:8px;border-left:2px solid #c2a468;font-size:11.5px;line-height:1.6;color:#3f3628}
+  .who b{font-weight:600;color:#7b2f24;white-space:nowrap}
+  .who i{font-style:normal;opacity:.95}
+  .who.good b{color:#3f5236} .who.good i{color:#3f5236}
+  .who.bad b{color:#a8342a} .who.bad i{color:#8a3225}
+  .row .req{font-size:10.5px;color:#7d7362;margin-top:3px;letter-spacing:.02em;line-height:1.5}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;margin:6px 0 0;padding:0;display:block}
   input[type=range]::-webkit-slider-runnable-track{height:2px;background:#b8a888}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;
     border-radius:50%;background:var(--ink);margin-top:-6.5px;box-shadow:0 1px 4px rgba(0,0,0,.4)}
@@ -81,38 +88,43 @@
   <header>
     <div class="kicker">建 安 二 十 四 年 · 秋</div>
     <h1>分 兵</h1>
-    <div class="sub">你只有五万人。<br>荆州、樊城、汉水，选一个先放手。</div>
+    <div class="sub">你六十一岁了。<br>这可能是你最后一次北伐。</div>
+    <div class="clock">秋 汛 还 有 二 十 日</div>
   </header>
 
   <div class="wrap">
     <div class="card">
       <div class="pool" id="poolBox">
         <div><div class="lbl">预 备 队 · 随 军</div><div class="num" id="poolNum">0</div></div>
-        <div class="lbl" id="poolHint">共 50,000</div>
+        <div class="lbl" id="poolHint">你手里还能改主意的兵</div>
       </div>
       <div class="bar"><i id="poolBar" style="width:0%"></i></div>
 
       <div class="row">
         <div class="top"><b>前线 · 围樊城</b><span id="vFront">30,000</span></div>
         <div class="req">围樊城需 18,000；挡徐晃需 34,000（无水军再 +3,000）</div>
+        <div class="who" id="wFront"></div>
         <input type="range" id="sFront" min="0" max="50000" step="1000" value="30000">
       </div>
 
       <div class="row">
         <div class="top"><b>江陵</b><span id="vJiang">8,000</span></div>
         <div class="req">硬线 8,000；要压住糜芳的心，10,000</div>
+        <div class="who" id="wJiang"></div>
         <input type="range" id="sJiang" min="0" max="50000" step="1000" value="8000">
       </div>
 
       <div class="row">
         <div class="top"><b>公安</b><span id="vGongan">3,000</span></div>
         <div class="req">傅士仁的最低守线 3,000；他一降，江陵就少一道门</div>
+        <div class="who" id="wGongan"></div>
         <input type="range" id="sGongan" min="0" max="50000" step="1000" value="3000">
       </div>
 
       <div class="row">
         <div class="top"><b>水军 · 汉水</b><span id="vNavy">5,000</span></div>
         <div class="req">水淹七军需 5,000；不足则徐晃可渡河夹击</div>
+        <div class="who" id="wNavy"></div>
         <input type="range" id="sNavy" min="0" max="50000" step="1000" value="5000">
       </div>
 
@@ -172,6 +184,26 @@
     document.getElementById('checks').innerHTML = chk.map(function(c){
       return '<span class="pill '+(c.ok?'ok':'bad')+'">'+(c.ok?'✓ ':'✗ ')+c.t+'</span>';
     }).join('');
+
+    var W = {
+      wFront: cfg.front>=34000 ? ['good','关平','父亲，营垒连成一片了。徐晃来，也得先问问我们的水。']
+            : cfg.front>=28000 ? ['','关平','够围城，不够打援。父亲，樊城还要多久？']
+            : ['bad','关平','父亲，兵不够。围不住，也打不动。'],
+      wJiang: cfg.jiang>=10000 ? ['good','糜芳','末将愿以死守江陵。']
+            : cfg.jiang>=8000 ? ['','糜芳','八千人……末将尽力。']
+            : ['bad','糜芳','……末将明白了。'],
+      wGongan: cfg.gongan>=3000 ? ['good','傅士仁','公安在，吴人过不去。']
+            : cfg.gongan>=1000 ? ['','傅士仁','一千人守一座城，末将只能守三天。']
+            : ['bad','傅士仁','将军，这是让末将去死。'],
+      wNavy: cfg.navy>=8000 ? ['good','赵累','汉水是我们的。于禁来多少人，都是死人。']
+            : cfg.navy>=5000 ? ['','赵累','水军够了。汉水能淹七军，但拦不住吕蒙。']
+            : ['bad','赵累','没有水军，汉水就不是我们的。']
+    };
+    Object.keys(W).forEach(function(id){
+      var v=W[id], el=document.getElementById(id);
+      el.className='who '+v[0];
+      el.innerHTML='<b>'+v[1]+'</b><i>'+v[2]+'</i>';
+    });
 
     var msg;
     if (l < 0) msg = '超编 ' + fmt(-l) + ' 人。你只有五万人。';
