@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>建安二十四年 · 分兵</title>
+<style>
+  :root{
+    --ink:#14110d; --paper:#e9dfcc; --paper2:#ded1b8;
+    --red:#a8342a; --red2:#c94b3c; --gold:#b08a44;
+    --green:#4f6b45; --dim:#8a7f6d;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;background:#0c0a08;color:var(--paper);
+    font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;}
+  body{display:flex;justify-content:center;min-height:100vh}
+  #app{width:100%;max-width:540px;padding:0 0 40px;background:
+    radial-gradient(circle at 50% -10%, #241d16 0%, #0c0a08 60%);
+    min-height:100vh;position:relative;overflow:hidden}
+  .wrap{padding:0 22px}
+  header{padding:26px 0 10px;text-align:center}
+  .kicker{font-size:11px;letter-spacing:.32em;color:var(--gold);opacity:.85}
+  h1{font-size:27px;margin:10px 0 6px;letter-spacing:.12em;font-weight:600}
+  .sub{font-size:12.5px;color:var(--dim);letter-spacing:.06em;line-height:1.7}
+  .rule{height:1px;background:linear-gradient(90deg,transparent,#4a3d2c,transparent);margin:18px 0}
+  .card{background:linear-gradient(180deg,var(--paper) 0%,var(--paper2) 100%);
+    color:var(--ink);border-radius:3px;padding:18px 18px 16px;margin:14px 0;
+    box-shadow:0 10px 30px rgba(0,0,0,.45), inset 0 0 60px rgba(120,95,60,.12)}
+  .card h2{font-size:15px;margin:0 0 4px;letter-spacing:.08em;font-weight:600}
+  .card .note{font-size:11.5px;color:#574e3f;line-height:1.6}
+  .pool{display:flex;justify-content:space-between;align-items:baseline;margin:6px 0 2px}
+  .pool .num{font-size:30px;font-weight:600;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+  .pool .lbl{font-size:11px;color:#6b6151;letter-spacing:.2em}
+  .pool.over .num{color:var(--red)}
+  .bar{height:2px;background:#cfc0a4;border-radius:2px;overflow:hidden;margin:8px 0 20px}
+  .bar i{display:block;height:100%;background:var(--gold);transition:width .18s}
+  .row{margin:17px 0 20px}
+  .row .top{display:flex;justify-content:space-between;align-items:baseline;font-size:13px}
+  .row .top b{font-weight:600;letter-spacing:.05em}
+  .row .top span{font-variant-numeric:tabular-nums;font-size:14px}
+  .row .req{font-size:11px;color:#4d4537;margin-top:3px;letter-spacing:.02em;line-height:1.5}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;margin:4px 0 0;padding:0;display:block}
+  input[type=range]::-webkit-slider-runnable-track{height:2px;background:#b8a888}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;
+    border-radius:50%;background:var(--ink);margin-top:-6.5px;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+  input[type=range]::-moz-range-track{height:2px;background:#b8a888}
+  input[type=range]::-moz-range-thumb{width:15px;height:15px;border:0;border-radius:50%;background:var(--ink)}
+  .chk{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .pill{font-size:10.5px;padding:4px 9px;border-radius:20px;border:1px solid #a89877;color:#5c5344;background:rgba(255,255,255,.25)}
+  .pill.ok{background:#dbe4d1;border-color:#7d9270;color:#33452b;font-weight:600}
+  .pill.bad{background:#ead3cd;border-color:#b88176;color:#77281c;font-weight:600}
+  .btn{display:block;width:100%;padding:15px;margin:20px 0 6px;border:0;border-radius:2px;
+    background:var(--red);color:#f3e7d2;font-size:15px;letter-spacing:.28em;font-family:inherit;
+    cursor:pointer;box-shadow:0 6px 20px rgba(168,52,42,.32)}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:#c0b199;border:1px solid #4c4030;box-shadow:none;
+    letter-spacing:.12em;font-size:12.5px;padding:13px;margin-top:10px}
+  .timeline{margin-top:6px}
+  .ev{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:12px 0;
+    border-bottom:1px dashed #c7b89c}
+  .ev:last-child{border-bottom:0}
+  .ev .d{font-size:10.5px;color:#8a7f6d;letter-spacing:.05em;padding-top:2px}
+  .ev .t{font-size:13px;line-height:1.65}
+  .ev .t em{font-style:normal;color:var(--red);font-weight:600}
+  .ev .why{font-size:10.8px;color:#7a6f5d;margin-top:4px;line-height:1.55}
+  .end{margin-top:8px}
+  .end .tag{display:inline-block;font-size:10px;letter-spacing:.24em;color:var(--red);
+    border:1px solid var(--red);padding:2px 7px;margin-bottom:9px}
+  .end h3{font-size:19px;margin:0 0 8px;letter-spacing:.1em}
+  .end p{font-size:12.8px;line-height:1.85;margin:0 0 9px;color:#332c22}
+  .end .later{border-left:2px solid var(--gold);padding-left:11px;color:#5a4f3d;font-size:12px}
+  .hint{font-size:11px;color:#6b6151;line-height:1.6;margin-top:10px}
+  .hidden{display:none}
+  .fade{animation:f .45s ease both}
+  @keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  footer{text-align:center;font-size:10px;color:#7a6a54;letter-spacing:.2em;padding:18px 0 0}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="kicker">建 安 二 十 四 年 · 秋</div>
+    <h1>分 兵</h1>
+    <div class="sub">你只有五万人。<br>荆州、樊城、汉水，选一个先放手。</div>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="pool" id="poolBox">
+        <div><div class="lbl">预 备 队 · 随 军</div><div class="num" id="poolNum">0</div></div>
+        <div class="lbl" id="poolHint">共 50,000</div>
+      </div>
+      <div class="bar"><i id="poolBar" style="width:0%"></i></div>
+
+      <div class="row">
+        <div class="top"><b>前线 · 围樊城</b><span id="vFront">30,000</span></div>
+        <div class="req">围樊城需 18,000；挡徐晃需 34,000（无水军再 +3,000）</div>
+        <input type="range" id="sFront" min="0" max="50000" step="1000" value="30000">
+      </div>
+
+      <div class="row">
+        <div class="top"><b>江陵</b><span id="vJiang">8,000</span></div>
+        <div class="req">硬线 8,000；要压住糜芳的心，10,000</div>
+        <input type="range" id="sJiang" min="0" max="50000" step="1000" value="8000">
+      </div>
+
+      <div class="row">
+        <div class="top"><b>公安</b><span id="vGongan">3,000</span></div>
+        <div class="req">傅士仁的最低守线 3,000；他一降，江陵就少一道门</div>
+        <input type="range" id="sGongan" min="0" max="50000" step="1000" value="3000">
+      </div>
+
+      <div class="row">
+        <div class="top"><b>水军 · 汉水</b><span id="vNavy">5,000</span></div>
+        <div class="req">水淹七军需 5,000；不足则徐晃可渡河夹击</div>
+        <input type="range" id="sNavy" min="0" max="50000" step="1000" value="5000">
+      </div>
+
+      <div class="chk" id="checks"></div>
+      <div class="hint" id="hint"></div>
+    </div>
+
+    <button class="btn" id="run">推 演 九 十 日</button>
+    <button class="btn ghost" id="hist">载入史实配置</button>
+
+    <div id="result" class="hidden">
+      <div class="rule"></div>
+      <div class="card">
+        <div class="timeline" id="timeline"></div>
+      </div>
+      <div class="card end" id="ending"></div>
+      <button class="btn ghost" id="again">再 分 一 次</button>
+    </div>
+
+    <footer>原型 · 数值待校 · 非最终平衡</footer>
+  </div>
+</div>
+
+<script>
+(function(){
+  var POOL = 50000;
+  var cfg = {front:30000, jiang:8000, gongan:3000, navy:5000};
+  var keys = ['front','jiang','gongan','navy'];
+  var els = {
+    front:['sFront','vFront'], jiang:['sJiang','vJiang'],
+    gongan:['sGongan','vGongan'], navy:['sNavy','vNavy']
+  };
+  var R = {front:18000, xu:34000, jiangHard:8000, jiangSafe:10000, gongan:3000, navy:5000, reserve:4000};
+
+  function fmt(n){ return n.toLocaleString('en-US'); }
+  function used(){ return cfg.front+cfg.jiang+cfg.gongan+cfg.navy; }
+  function left(){ return POOL - used(); }
+
+  function syncUI(){
+    keys.forEach(function(k){
+      document.getElementById(els[k][0]).value = cfg[k];
+      document.getElementById(els[k][1]).textContent = fmt(cfg[k]);
+    });
+    var l = left();
+    document.getElementById('poolNum').textContent = fmt(l);
+    document.getElementById('poolBox').classList.toggle('over', l < 0);
+    document.getElementById('poolBar').style.width = Math.min(100, used()/POOL*100) + '%';
+
+    var chk = [
+      {t:'围住樊城', ok: cfg.front >= R.front},
+      {t:'挡得住徐晃', ok: cfg.front >= R.xu},
+      {t:'江陵不丢', ok: cfg.jiang >= R.jiangHard},
+      {t:'公安不降', ok: cfg.gongan >= R.gongan},
+      {t:'汉水在手', ok: cfg.navy >= R.navy},
+      {t:'留得下预备', ok: l >= R.reserve}
+    ];
+    document.getElementById('checks').innerHTML = chk.map(function(c){
+      return '<span class="pill '+(c.ok?'ok':'bad')+'">'+(c.ok?'✓ ':'✗ ')+c.t+'</span>';
+    }).join('');
+
+    var msg;
+    if (l < 0) msg = '超编 ' + fmt(-l) + ' 人。你只有五万人。';
+    else if (l > 8000) msg = '预备队堆在手里不打仗，前线就会缺人。';
+    else if (chk.slice(0,5).every(function(c){return c.ok;}) && l < R.reserve)
+      msg = '刚好够。一步都不能错，而且你没有兵可以补口。';
+    else if (chk.slice(0,5).every(function(c){return c.ok;}))
+      msg = '全都在线上。这是理论上限——你还剩 '+fmt(l)+' 人。';
+    else msg = '每挪一格，都有另一处开始漏。';
+    document.getElementById('hint').textContent = msg;
+  }
+
+  function bind(k){
+    var slider = document.getElementById(els[k][0]);
+    slider.addEventListener('input', function(){
+      var want = parseInt(slider.value,10);
+      if (want < 0) want = 0;
+      cfg[k] = want;
+      syncUI();
+    });
+  }
+  keys.forEach(bind);
+
+  document.getElementById('hist').addEventListener('click', function(){
+    cfg = {front:40000, jiang:4000, gongan:1000, navy:5000};
+    syncUI();
+    document.getElementById('hint').textContent =
+      '史实：关羽带走约四万（含水军），江陵公安合计五千。';
+  });
+
+  function simulate(c, reserve){
+    var ev = [];
+    var waterWin = (c.navy >= R.navy) && (c.front >= 25000);
+    var worried = c.jiang < R.jiangHard;
+    var Feff = c.front - (worried ? 10000 : 0);
+    var xuNeed = R.xu + (c.navy < R.navy ? 3000 : 0);
+    var xu = Feff >= xuNeed ? 'hold' : (Feff >= 27000 ? 'break' : 'rout');
+    var gonganHold = c.gongan >= R.gongan;
+    var jiangFall = (!gonganHold) || (c.jiang < R.jiangHard);
+
+    ev.push({d:'八 月', t:'你留下 <em>'+fmt(c.jiang+c.gongan)+'</em> 人守江陵与公安，带 <em>'+fmt(c.front+c.navy)+'</em> 人北上。',
+      why:'荆州全境六万，你能带走的只有五万。留守的人越少，后方的门越薄。'});
+
+    if (waterWin){
+      ev.push({d:'八 月', t:'汉水暴涨，于禁七军尽没。你收降 <em>三万</em>。',
+        why:'水军 5,000 以上才控得住汉水；前线 25,000 以上才吃得下这三万人。'});
+      ev.push({d:'九 月', t:'降兵要吃饭。你派人去湘关，取了孙权的米。',
+        why:'三万张嘴，一天三十吨。你抢的不是粮，是开战的理由。'});
+    } else if (c.navy < R.navy){
+      ev.push({d:'八 月', t:'汉水在你手里不够稳。于禁退上高地，只丢了辎重。',
+        why:'水军只有 '+fmt(c.navy)+'，低于 5,000，水淹七军没有发生。'});
+    } else {
+      ev.push({d:'八 月', t:'你围不住樊城，于禁从容列阵。水淹七军没有发生。',
+        why:'前线只有 '+fmt(c.front)+'，低于 25,000。'});
+    }
+
+    if (xu === 'hold'){
+      ev.push({d:'九 月', t:'徐晃十二营到。你把营垒连成一片，他不敢攻。',
+        why:'前线有效兵力 '+fmt(Feff)+'，在 '+fmt(xuNeed)+' 以上。'});
+    } else if (xu === 'break'){
+      ev.push({d:'九 月', t:'徐晃破围。你烧营退往围头，主力还在。',
+        why:'前线有效兵力 '+fmt(Feff)+'，不足 '+fmt(xuNeed)+'。' + (worried ? '后方不稳，你分心了。' : (c.navy < R.navy ? '汉水不在你手里，徐晃可以渡河夹击。' : ''))});
+    } else {
+      ev.push({d:'九 月', t:'徐晃突入营垒。阵脚乱了，<em>死伤过半</em>。',
+        why:'前线有效兵力只有 '+fmt(Feff)+'，低于 27,000。'});
+    }
+
+    ev.push({d:'九 月', t:'陆逊的信到了。措辞谦卑，一字未提兵。',
+      why:'他什么都没要——这不是讲和，这是让你放心。'});
+
+    if (c.jiang >= R.jiangSafe){
+      ev.push({d:'十 月', t:'糜芳把信烧了，没回。江陵城门关着。',
+        why:'江陵有 '+fmt(c.jiang)+' 人。兵够，他的胆子就够。'});
+    } else if (c.jiang >= R.jiangHard){
+      ev.push({d:'十 月', t:'糜芳在城里来回走。他没开门，也没说死守。',
+        why:'江陵只有 '+fmt(c.jiang)+'，不到 10,000。他不确定你回得来。'});
+    } else {
+      ev.push({d:'十 月', t:'糜芳的使者出了城，往东去了。',
+        why:'江陵只有 '+fmt(c.jiang)+'，低于 8,000。他不是想反，是怕你回来治他的罪。'});
+    }
+
+    if (!gonganHold){
+      ev.push({d:'十 月', t:'吕蒙白衣渡江。公安先开。<em>傅士仁降</em>，然后带路去江陵。',
+        why:'公安只有 '+fmt(c.gongan)+'，低于 3,000。他是第一个降的，也是去劝降糜芳的。'});
+    } else {
+      ev.push({d:'十 月', t:'吕蒙到了公安城下。傅士仁闭门，吴军绕城而过。',
+        why:'公安有 '+fmt(c.gongan)+' 人，守得住。但没有援军。'});
+    }
+
+    if (jiangFall){
+      ev.push({d:'十 月', t:'江陵易主。你的将士家属，全在吕蒙手里。',
+        why:'江陵失守，不是城破了，是门开了。'});
+      ev.push({d:'十 一 月', t:'军心散了。士兵听说家里平安、待遇比你在时还好，<em>当夜走了大半</em>。',
+        why:'《三国志》写"羽军遂散"。不是打散的，是知道家没了，自己散的。'});
+    }
+
+    var ending, tag, later;
+    if (!jiangFall && xu === 'hold' && waterWin){
+      ending='前 后 夹 击'; tag='惨 胜';
+      later='吕蒙顿在坚城之下，你从背后压上来。吴军退了，荆州保住了。但樊城没下，粮尽了——这个秋天你什么也没赢到。';
+    } else if (!jiangFall){
+      ending='退 保 江 陵'; tag='无 功';
+      later='你保住了荆州，也保住了人。但北伐停了，曹操缓过来了。往后十年你都在守，没再北进一步。';
+    } else if (xu === 'rout'){
+      ending='溃 败'; tag='最 坏';
+      later='你死在回师的路上，比史实更早。上庸跟着丢了，孟达降魏，刘封被赐死。';
+    } else if (xu !== 'rout' && reserve >= 3000){
+      ending='突 围 入 川'; tag='败 而 不 亡';
+      later='你带数千人进了峡口。荆州没了，人还在。刘备没有伐吴，夷陵那场火没烧起来——蜀汉多活了二十年，但隆中对从此只是一句话。';
+    } else {
+      ending='麦 城'; tag='史 实';
+      later='十二月，临沮。四十里外就是蜀道，你没走到。两年后刘备伐吴，夷陵大败，蜀汉元气尽失。';
+    }
+
+    return {ev:ev, ending:ending, tag:tag, later:later, xu:xu, jiangFall:jiangFall, reserve:reserve};
+  }
+
+  function render(r){
+    document.getElementById('timeline').innerHTML = r.ev.map(function(e){
+      return '<div class="ev"><div class="d">'+e.d+'</div><div><div class="t">'+e.t+
+             '</div><div class="why">'+e.why+'</div></div></div>';
+    }).join('');
+
+    var meta = (r.jiangFall ? '江陵易主 · 主力' + (r.xu==='rout'?'溃散':'尚存') : '江陵未失 · 主力建制完整')
+      + ' · 预备队 ' + fmt(r.reserve);
+    document.getElementById('ending').innerHTML =
+      '<div class="tag">'+r.tag+'</div><h3>'+r.ending+'</h3>'+
+      '<p class="note" style="margin-bottom:12px;color:#6b6151">'+meta+'</p>'+
+      '<p>'+r.later+'</p>'+
+      '<p class="later">决定结局的不是战场上的那一步，是你出发时分给后方的那几千人。</p>';
+
+    var el=document.getElementById('result');
+    el.classList.remove('hidden'); el.classList.remove('fade');
+    void el.offsetWidth; el.classList.add('fade');
+    el.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  document.getElementById('run').addEventListener('click', function(){
+    if (left() < 0){ document.getElementById('hint').textContent='超编了，先减兵。'; return; }
+    render(simulate(cfg, left()));
+  });
+  document.getElementById('again').addEventListener('click', function(){
+    document.getElementById('result').classList.add('hidden');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  syncUI();
+})();
+</script>
+</body>
+</html>
